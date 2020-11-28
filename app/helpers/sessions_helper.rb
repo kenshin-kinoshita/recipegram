@@ -2,6 +2,13 @@ module SessionsHelper
   def log_in(user)
     session[:user_id] = user.id
   end
+  
+  # ユーザーのセッションを永続的にする
+  def remember(user)
+    user.remember
+    cookies.permanent.signed[:user_id] = user.id
+    cookies.permanent[:remember_token] = user.remember_token
+  end
 
   def current_user
     if session[:user_id]
@@ -12,8 +19,15 @@ module SessionsHelper
   def logged_in?
     !current_user.nil?
   end
+  
+  def forget(user)
+    user.forget
+    cookies.delete(:user_id)
+    cookies.delete(:remember_token)
+  end
 
   def log_out
+    forget(current_user)
     session.delete(:user_id)
     @current_user = nil
   end
