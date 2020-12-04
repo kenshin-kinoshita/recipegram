@@ -24,6 +24,11 @@ class User < ApplicationRecord
       SecureRandom.urlsafe_base64
     end
   end
+  
+  # フィード一覧を取得
+  def feed
+    Dish.where("user_id = ?", id)
+  end
 
   # 永続セッションのためにユーザーをデータベースに記憶する
   def remember
