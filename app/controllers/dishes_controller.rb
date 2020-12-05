@@ -33,6 +33,18 @@ class DishesController < ApplicationController
       render 'edit'
     end
   end
+  
+  def destroy
+    @dish = Dish.find(params[:id])
+    if current_user.admin? || current_user?(@dish.user)
+      @dish.destroy
+      flash[:success] = "料理が削除されました"
+      redirect_to request.referrer == user_url(@dish.user) ? user_url(@dish.user) : root_url
+    else
+      flash[:danger] = "他人の料理は削除できません"
+      redirect_to root_url
+    end
+  end
 
 
   private
