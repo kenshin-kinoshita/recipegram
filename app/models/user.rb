@@ -78,8 +78,22 @@ class User < ApplicationRecord
   def followed_by?(other_user)
     followers.include?(other_user)
   end
-
   
+  # 料理をお気に入りに登録する
+  def favorite(dish)
+    Favorite.create!(user_id: id, dish_id: dish.id)
+  end
+
+  # 料理をお気に入り解除する
+  def unfavorite(dish)
+    Favorite.find_by(user_id: id, dish_id: dish.id).destroy
+  end
+
+  # 現在のユーザーがお気に入り登録してたらtrueを返す
+  def favorite?(dish)
+    !Favorite.find_by(user_id: id, dish_id: dish.id).nil?
+  end
+
   private
     def downcase_email
       self.email = email.downcase
